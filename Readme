@@ -1,0 +1,72 @@
+PROYECTO BARCOS - v6
+Universidad de Caldas
+Ingeniería de Software
+2018 - 2022
+
+Proyecto usado como ejemplo de algunos conceptos de orientación a objetos.
+No es un proyecto completo, pues la idea es que los estudiantes, como ejercicio, 
+  realicen pruebas,adicionen validaciones y otras funcionalidades.
+
+Funcionalidad básica: en un puerto se tiene el registro de los barcos que llegan,
+ y, además de unos datos básicos, se desea conocer la capacidad de cada barco,
+ para poder obtener la capacidad total que maneja el puerto.
+
+*********** CAMBIOS con respecto a v5
+- Se trabaja con un ORM: EclipseLink, para facilitar el trabajo con una base de datos.
+  Para esto:
+	Se convierte en un proyecto Maven y en el pom.xml se incluyen las dependencias
+	 a las librerías necesarias (de eclipselink, jpa y driver sqlite). 
+  	Se adicionan constructores por defecto y métodos set en las clases de entidad 
+  	(Barco, Velero y Carguero).
+  	Se adicionan anotaciones en las clases de entidad para definir cómo será el mapeo a tablas.
+  	Se adiciona el archivo "persistence.xml" en la carpeta META-INF, 
+  	  con la configuración de la conexión con la base de datos, 
+  	  y define la "persistence unit" llamada jpaBarcos.
+	Se crea una clase llamada OrmBarcos, que implementa la interfaz de persistencia,
+	  donde se usa JPA para el trabajo con la base de datos. 
+- Se crea la clase "FabricaRepositorios", que corresponde al patrón Simple Factory,
+  para que la clase Puerto no tenga que conocer los repositorios concretos.
+  Se cambia el constructor de Puerto para que use la fábrica 
+     (inicialmente con un tipo de repositorio fijo - Orm).
+- Se adicionan en el pom.xml otras dependencias usadas: Json y Junit
+
+*********** CAMBIOS con respecto a v4
+- Se cambia la lista de parámetros que recibe el método adicionarBarco,
+	de la clase Puerto, para recibir solo un JSON (JSONObject), cumpliendo así
+	el principio Open-Closed.
+	Para usar el objeto JSON se adiciona el jar: json-20210307.jar
+	(se puede descargar de: https://mvnrepository.com/artifact/org.json/json).
+	Esto también implica cambios en las clases:
+	 VentanaControlBarcos, ControlCalcularCapacidadTest y ControlAdicionarBarcoTest
+- Se crea una clase "FabricaBarcos" que corresponde al patrón Simple Factory,
+	para que cree los objetos Velero y Carguero, y así la clase Puerto
+	no tiene que conocer estas clases hijas al crear el barco
+	(principio Dependency Inversion).
+	También se cambian los constructores de Barco, Velero y Carguero
+	para que tengan visibilidad de paquete (para que los use la fábrica,
+	no clases de otros paquetes).
+  	
+*********** CAMBIOS con respecto a v3
+- Se adicionan pruebas unitarias (y algunas de integración) con JUnit. 
+	Para esto se crea un nuevo folder llamado "test" con las clases de prueba:
+	 CarguertoTest, VeleroTest (para el método calcularCapacidad) 
+	 ControlAdicionarBarcoTest, ControlCalcularCapacidadTest
+	  (para los métodos respectivos en la clase ControlPuerto)
+- Se hacen cambios en Velero y Carguero para que no retornen una capacidad negativa.
+- Se adiciona un constructor en la clase ControlPuerto que recibe un repositorio 
+   y se cambia la visibilidad de un método privado a omitida o de paquete
+  (para facilitar las pruebas).
+  
+*********** CAMBIOS con respecto a v2
+- Se adiciona una interfaz que ofrece los servicios para manejar la persistencia:
+  RepositorioBarcos, 
+  y una clase que la implementa (solo para pruebas, con una lista en memoria):
+  ListaBarcos.
+  Se crea el paquete "persistencia" para la interfaz y quienes la implementen. 
+- Cambia la clase de control (para usar la interfaz en lugar de tener la lista).
+  No cambia la interfaz gráfica ni las clases de entidad.
+
+*********** CAMBIOS con respecto a v1
+- Se crea una nueva excepción (BarcoException) para el manejo de los errores 
+  que tienen que ver la gestión de los barcos.
+- No cambian las clases de entidad. Cambia la clase de control y la interfaz gráfica.
