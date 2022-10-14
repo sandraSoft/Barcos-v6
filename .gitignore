@@ -7,3 +7,6 @@
 
 *.db
 
+*.iml
+/.idea/
+/out/
